@@ -7,35 +7,40 @@ import urllib.parse
 HEADRS = {'user-agent':"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36",
 
 }
-POSITION = "1(35,39),2(98,45),3(183,44),4(253,42),5(47,119),6(95,125),7(200,125),8(265,128)"
-URL_YANZHENGMA = "https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand&0.5004204286123859"
-URL_LOGIN = "https://kyfw.12306.cn/passport/web/login"
-URL_CHECK = "https://kyfw.12306.cn/passport/captcha/captcha-check"
 
+#请求车次信息
 URL_QUERYINFO = "https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2018-04-20&leftTicketDTO.from_station=HZH&leftTicketDTO.to_station=EPH&purpose_codes=ADULT"
+
 URL_CHECKUSER = "https://kyfw.12306.cn/otn/login/checkUser"
-URL_SUBMITORDERREQUEST = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest"
+# 请求doc,目的是获取某些字段
 URL_INIT = "https://kyfw.12306.cn/otn/confirmPassenger/initDc"
+
 URL_GETPASSENGERDTOS = "https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs"
-URL_CHECKORDER = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
-URL_GETQUEUE = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
-URL_CONFIRM = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
+
 URL_WAITTIME = "https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime?random=%s&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=%s"
 URL_BACK = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue"
 
 URL_Location = "https://kyfw.12306.cn/otn/resources/js/framework/station_name.js?station_version=1.9051"
+
+# 验证码请求
+POSITION = "1(35,39),2(98,45),3(183,44),4(253,42),5(47,119),6(95,125),7(200,125),8(265,128)"
+URL_YANZHENGMA = "https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand&0.5004204286123859"
+URL_CHECK = "https://kyfw.12306.cn/passport/captcha/captcha-check"
 FROM_DATA = {
 	'answer':'',
 	'login_site':'E',
 	'rand':'sjrand'
 }
 
+# 登陆
+URL_LOGIN = "https://kyfw.12306.cn/passport/web/login"
 Login_DATA = {
-	'username':'17855869675',
-	'password':'QIUqm999',
+	'username':'xxx',
+	'password':'xxx',
 	'appid':'otn'
 }
-
+# 提交下单
+URL_SUBMITORDERREQUEST = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest"
 SUMMIT_DATA = {
 	'secretStr':'',
 	'train_date':'2018-04-19',
@@ -46,7 +51,8 @@ SUMMIT_DATA = {
 	'query_to_station_name':'嘉兴南',
 	'undefined':''
 }
-
+# 乘客信息
+URL_CHECKORDER = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
 CHECKORDER_DATA = {
 	'cancel_flag':'2',
 	'bed_level_order_num':'000000000000000000000000000000',
@@ -58,7 +64,8 @@ CHECKORDER_DATA = {
 	'_json_att':'',
 	'REPEAT_SUBMIT_TOKEN':''
 }
-
+# 检查订单信息
+URL_GETQUEUE = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount"
 ORDER_DATA = {
 	'train_date':'Mon Apr 16 2018 00:00:00 GMT+0800 (中国标准时间)',
 	'train_no':'56000K8372C0',
@@ -73,6 +80,8 @@ ORDER_DATA = {
 	'REPEAT_SUBMIT_TOKEN':''
 }
 
+#
+URL_CONFIRM = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
 COMFIM_DATA = {
 	'passengerTicketStr':'1,0,1,邱青苗,1,330723199604236429,13023231290,N',
 	'oldPassengerStr':'邱青苗,1,330723199604236429,1_',
@@ -80,7 +89,7 @@ COMFIM_DATA = {
 	'purpose_codes':'00',
 	'key_check_isChange':'',
 	'leftTicketStr':'',
-	'train_location':'H6',
+	'train_location':'G1',
 	'choose_seats':'',
 	'seatDetailType':'000',
 	'whatsSelect':'1',
@@ -135,16 +144,7 @@ class Ticketer12306(object):
 			print("登录成功")
 			rsp = self.session.post("https://kyfw.12306.cn/passport/web/auth/uamtk",data={'appid':'otn'},headers=headers)
 			dic = json.loads(rsp.text)
-			# self.session.cookies.set('tk',dic['newapptk'])
-			# requests.utils.add_dict_to_cookiejar(self.session.cookies,{'tk:':dic['newapptk']})  
-			# print(self.session.cookies)
-			print(dic['newapptk'])
 			rsp = self.session.post("https://kyfw.12306.cn/otn/uamauthclient",data={'tk':dic['newapptk']},headers=headers)
-			print(rsp.text)
-			# rsp = self.session.get("https://kyfw.12306.cn/otn/index/initMy12306")
-			# print(rsp.text)
-			# result = json.loads(rsp.text)
-			# print(result['result_code'])
 			self.HandleTicketInfo()
 			self.GetTicket()
 		else:
@@ -167,6 +167,7 @@ class Ticketer12306(object):
 		stationTrainCode = self.arr[3]
 		secretStr = urllib.parse.unquote(self.arr[0]) 
 		train_location = self.arr[15]
+		
 		print(secretStr)
 		# print(train_date)
 		SUMMIT_DATA.update({'secretStr':secretStr,
@@ -179,8 +180,8 @@ class Ticketer12306(object):
 							})
 		ORDER_DATA.update({
 			'train_date':'Mon Apr %s 2018 00:00:00 GMT+0800 (中国标准时间)'%train_date[-2:],
-			'train_no':'56000K8372C0',
-			'stationTrainCode':'K8372',
+			'train_no':train_no,
+			'stationTrainCode':stationTrainCode,
 			'fromStationTelecode':source,
 			'toStationTelecode':destination,
 			'train_location':train_location
@@ -196,7 +197,7 @@ class Ticketer12306(object):
 		# print(location_info)
 
 	def GetTicket(self):
-		csr = self.session.post(URL_CHECKUSER,{'_json_att':''})
+		# csr = self.session.post(URL_CHECKUSER,{'_json_att':''})
 
 		print(SUMMIT_DATA)
 
@@ -218,7 +219,9 @@ class Ticketer12306(object):
 		ORDER_DATA.update({'REPEAT_SUBMIT_TOKEN':result,'leftTicket':urllib.parse.unquote(self.arr[12])})
 		getq = self.session.post(URL_GETQUEUE,ORDER_DATA)
 		print('getQueueCount:'+getq.text)
-		COMFIM_DATA.update({'REPEAT_SUBMIT_TOKEN':result,'leftTicket':urllib.parse.unquote(self.arr[12]),'key_check_isChange':key})
+		COMFIM_DATA.update({'REPEAT_SUBMIT_TOKEN':result,'leftTicketStr':urllib.parse.unquote(self.arr[12]),'key_check_isChange':key,''})
+		print(COMFIM_DATA)
+		print("------"+urllib.parse.unquote(self.arr[12]))
 		cnfm = self.session.post(URL_CONFIRM,COMFIM_DATA)
 		print('cnfm:'+cnfm.text)
 		self.session.get(URL_WAITTIME%(time.time()* 1000,result))
