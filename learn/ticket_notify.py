@@ -56,8 +56,8 @@ URL_CHECKORDER = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo"
 CHECKORDER_DATA = {
 	'cancel_flag':'2',
 	'bed_level_order_num':'000000000000000000000000000000',
-	'passengerTicketStr':'1,0,1,邱青苗,1,330723199604236429,13023231290,N',
-	'oldPassengerStr':'邱青苗,1,330723199604236429,1_',
+	'passengerTicketStr':'xxxx',
+	'oldPassengerStr':'xxxx',
 	'tour_flag':'dc',
 	'randCode':'',
 	'whatsSelect':'1',
@@ -83,8 +83,8 @@ ORDER_DATA = {
 #
 URL_CONFIRM = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue"
 COMFIM_DATA = {
-	'passengerTicketStr':'1,0,1,邱青苗,1,330723199604236429,13023231290,N',
-	'oldPassengerStr':'邱青苗,1,330723199604236429,1_',
+	'passengerTicketStr':'xxxx',
+	'oldPassengerStr':'xxxx',
 	'randCode':'',
 	'purpose_codes':'00',
 	'key_check_isChange':'',
