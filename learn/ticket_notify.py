@@ -186,10 +186,7 @@ class Ticketer12306(object):
 			'toStationTelecode':destination,
 			'train_location':train_location
 			}) 
-		ORDER_DATA.update({
-			'train_location':train_location
-		}
-		)
+
 
 	def FindLocationInfo():
 		rsp = requests.get(URL_Location)
